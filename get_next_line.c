@@ -6,13 +6,13 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/16 18:13:27 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/19 13:53:01 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*ft_read(int fd, char *ptr)
+static char	*ft_read(int fd, char *buffer)
 {
 	int	bytes;
 	char *temp;
@@ -21,38 +21,85 @@ static char	*ft_read(int fd, char *ptr)
 	temp = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!temp)
 		return (NULL);
-	while(!ft_strchr(ptr, (int)'\n') && bytes != '\0')
+	while(!ft_strchr(buffer, (int)'\n') && bytes != '\0')
 	{
 		bytes = read(fd, temp, BUFFER_SIZE);
 		if (bytes == 0)
 		{
 			free(temp);
-			free(ptr);
+			free(buffer);
 			return (NULL);
 		}
 		temp[bytes] = '\0';
-		ptr = ft_strjoin(ptr, temp);
+		buffer = ft_strjoin(buffer, temp);
 	}
 	free(temp);
-	return (ptr);
+	return (buffer);
+}
+
+static char	*ft_leftover(char *buffer)
+{
+	char	*new;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	if (!buffer)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+		i++;
+	if (buffer[i] == '\0')
+	{
+		free(buffer);
+		return (NULL);
+	}
+	new = malloc(sizeof(char) * ft_strlen(buffer) - i + 1);
+	if (!new)
+	{
+		free(new);
+		return (NULL);
+	}
+	while (buffer[i])
+		new[j++] = buffer[i++];
+	new[j] = '\0';
+	free(buffer);
+	return (new);
 }
 
 char		*get_next_line(int fd)
 {
-	static char	*ptr;
+	static char	*buffer[OPEN_MAX];
 	char		*line;
 	int			i;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > OPEN_MAX)
 		return (NULL);
-	if (!ptr)
-		ptr = ft_strdup("");
-	ptr = ft_read(fd, ptr);
-	if (!ptr)
+	if (!buffer)
+		buffer = ft_strdup("");
+	buffer = ft_read(fd, buffer);
+	if (!buffer)
+	{
+		free (buffer);
 		return (NULL);
-	while(ptr[i] != '\n' && ptr[i] != '\0')
+	}
+	while(buffer[i] != '\n' && buffer[i] != '\0')
 		i++;
-	line = malloc(ft_strlen(
+	line = ft_substr(ptr, 0, i + 1);
+	buffer = ft_leftover(ptr);
+	// if (!line || !line[0]) ???
+	if (!line)
+	{
+		free (line);
+		return (NULL);
+	}
+
+
+
+
 
 
 
