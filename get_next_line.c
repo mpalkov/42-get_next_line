@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/20 13:04:11 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/20 17:58:46 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ static char	*ft_read(int fd, char *buffer)
 	temp = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!temp)
 		return (NULL);
-	while(!ft_strchr(buffer, (int)'\n') && bytes != '\0')
+	temp[0] = '\0';
+	while (!ft_strchr(buffer, '\n') && bytes != 0)
 	{
 		bytes = read(fd, temp, BUFFER_SIZE);
-		if (bytes == 0)
+		if (bytes == -1)
 		{
 			free(temp);
 			free(buffer);
@@ -72,11 +73,12 @@ static char	*ft_leftover(char *buffer)
 
 char		*get_next_line(int fd)
 {
-	static char	*buffer[OPEN_MAX];
+	static char	*buffer;
 	char		*line;
 	int			i;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > OPEN_MAX)
+	i = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
 		return (NULL);
 	if (!buffer)
 		buffer = ft_strdup("");
@@ -88,20 +90,16 @@ char		*get_next_line(int fd)
 	}
 	while(buffer[i] != '\n' && buffer[i] != '\0')
 		i++;
-	line = ft_substr(ptr, 0, i + 1);
-	buffer = ft_leftover(ptr);
+	line = ft_substr(buffer, 0, i + 1);
+	buffer = ft_leftover(buffer);
 	// if (!line || !line[0]) ???
 	if (!line)
 	{
 		free (line);
 		return (NULL);
 	}
-
-
-
-
-
-
-
+//
+printf("line:\n%s", line);
+	return (line);
 }
 

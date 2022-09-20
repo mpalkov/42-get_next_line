@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/19 13:01:14 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/20 17:58:51 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char *ft_strdup(char *str)
 
 	len = ft_strlen(str);
 	newstr = malloc (len + 1);
-	if (len == 0 || !newstr)
+	if (!newstr)
 		return (NULL);
 	len = 0;
 	while (str[len])
@@ -78,10 +78,10 @@ char *ft_strchr(char *s, int c)
 	int		i;
 
 	i = 0;
-	while (str[i] != (char)c && str[i] != '\0')
+	while (s[i] != (char)c && s[i] != '\0')
 		i++;
-	if (str[i] == (char)c)
-		return (&str[i]);
+	if (s[i] == (char)c)
+		return (&s[i]);
 	else
 		return (NULL);
 }
@@ -92,7 +92,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	size_t	i;
 
 	i = 0;
-	if (!s || start >= (unsigned int)ft_strlen(s), || len == 0)
+	if (!s || start >= (unsigned int)ft_strlen(s) || len == 0)
 	{
 		newstr = malloc(1);
 		if (!newstr)
