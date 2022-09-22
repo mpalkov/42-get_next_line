@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 11:24:30 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/20 16:02:53 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/22 11:58:04 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@ int main(void)
 	theline = malloc(999);
 //	bytes = read(fd, theline, 999);
 //	printf("CONTENT:\n%s\nbytes read: %d", theline, bytes);
-	while (i < 5)
+	while (theline)
 	{
 		printf("----next line:----\n");
 		theline = get_next_line(fd);
+		printf("%s", theline);
 		i++;
 	}
 	return (0);

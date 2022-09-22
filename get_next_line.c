@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/20 17:58:46 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/22 14:17:45 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static char	*ft_leftover(char *buffer)
 		return (NULL);
 	}
 	new = malloc(sizeof(char) * ft_strlen(buffer) - i + 1);
+	i++;
 	if (!new)
 	{
 		free(new);
@@ -81,7 +82,14 @@ char		*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
 		return (NULL);
 	if (!buffer)
+	{
 		buffer = ft_strdup("");
+		if (!buffer)
+		{
+			free(buffer);
+			return (NULL);
+		}
+	}	
 	buffer = ft_read(fd, buffer);
 	if (!buffer)
 	{
@@ -93,13 +101,13 @@ char		*get_next_line(int fd)
 	line = ft_substr(buffer, 0, i + 1);
 	buffer = ft_leftover(buffer);
 	// if (!line || !line[0]) ???
-	if (!line)
+	if (!line || !line[0])
 	{
 		free (line);
 		return (NULL);
 	}
 //
-printf("line:\n%s", line);
+//printf("line:\n%s", line);
 	return (line);
 }
 

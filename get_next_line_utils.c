@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/20 17:58:51 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/22 14:17:39 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char *ft_strdup(char *str)
 	char	*newstr;
 
 	len = ft_strlen(str);
-	newstr = malloc (len + 1);
+	newstr = (char *)malloc (len + 1);
 	if (!newstr)
 		return (NULL);
 	len = 0;
@@ -55,7 +55,7 @@ char *ft_strjoin(char *s1, char *s2)
 	len2 = ft_strlen(s2);
 	i = 0;
 	j = 0;
-	newstr = malloc(len1 + len2 + 1);
+	newstr = (char *)malloc(len1 + len2 + 1);
 	if (!newstr)
 		return (0);
 	while (s1[i])
@@ -94,7 +94,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	i = 0;
 	if (!s || start >= (unsigned int)ft_strlen(s) || len == 0)
 	{
-		newstr = malloc(1);
+		newstr = (char *)malloc(1);
 		if (!newstr)
 			return (NULL);
 		newstr[0] = '\0';
@@ -102,7 +102,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	}
 	if (start + len > ft_strlen(s))
 		len = ft_strlen(s) - start;
-	newstr = malloc(len + 1);
+	newstr = (char *)malloc(len + 1);
 	if (!newstr)
 		return (NULL);
 	while (s[start + (unsigned int)i] && i < len)
