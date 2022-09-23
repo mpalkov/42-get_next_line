@@ -6,13 +6,20 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/22 14:17:39 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/23 17:56:50 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t ft_strlen(char *str)
+void	*ft_char_freenull(char *ptr)
+{
+	free(ptr);
+	ptr = NULL;
+	return (NULL);
+}
+
+size_t	ft_strlen(char *str)
 {
 	size_t	i;
 
@@ -24,7 +31,7 @@ size_t ft_strlen(char *str)
 	return (i);
 }
 
-char *ft_strdup(char *str)
+char	*ft_strdup(char *str)
 {
 	size_t	len;
 	char	*newstr;
@@ -43,13 +50,13 @@ char *ft_strdup(char *str)
 	return (newstr);
 }
 
-char *ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	len1;
 	size_t	len2;
 	size_t	i;
 	size_t	j;
-	char 	*newstr;
+	char	*newstr;
 
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
@@ -57,7 +64,7 @@ char *ft_strjoin(char *s1, char *s2)
 	j = 0;
 	newstr = (char *)malloc(len1 + len2 + 1);
 	if (!newstr)
-		return (0);
+		return (ft_char_freenull(s1));
 	while (s1[i])
 	{
 		newstr[i] = s1[i];
@@ -70,10 +77,11 @@ char *ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	newstr[i] = '\0';
+	ft_char_freenull(s1);
 	return (newstr);
 }
 
-char *ft_strchr(char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	int		i;
 

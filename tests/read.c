@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 11:24:30 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/22 11:58:04 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/23 15:08:08 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int main(void)
 	char	*theline;
 //	int		bytes;
 	int		i = 0;
-	
+
+	theline = NULL;	
 	fd = open("tests/textfile.txt", O_RDONLY);
 	printf("file descriptor = %d\n", fd);
 	theline = malloc(999);
