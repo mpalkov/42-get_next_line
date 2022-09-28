@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/19 12:24:28 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/28 12:17:49 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/28 12:16:59 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <limits.h>
 # include <stdlib.h>
@@ -30,3 +30,7 @@ char	*get_next_line(int fd);
 void	*ft_char_freenull(char *ptr);
 
 #endif
+
+//limits.h - OPEN_MAX
+//stdlib.h - malloc
+//unistd.h - write
