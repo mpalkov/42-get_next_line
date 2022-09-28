@@ -6,11 +6,18 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/23 17:56:53 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/27 11:38:46 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	*ft_char_freenull(char *ptr)
+{
+	free(ptr);
+	ptr = NULL;
+	return (NULL);
+}
 
 static char	*ft_read(int fd, char *buffer)
 {

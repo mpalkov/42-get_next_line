@@ -6,18 +6,11 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/23 17:56:50 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/27 12:29:38 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void	*ft_char_freenull(char *ptr)
-{
-	free(ptr);
-	ptr = NULL;
-	return (NULL);
-}
 
 size_t	ft_strlen(char *str)
 {
@@ -71,11 +64,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		i++;
 	}
 	while (s2[j])
-	{
-		newstr[i] = s2[j];
-		i++;
-		j++;
-	}
+		newstr[i++] = s2[j++];
 	newstr[i] = '\0';
 	ft_char_freenull(s1);
 	return (newstr);
