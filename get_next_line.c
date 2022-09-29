@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/27 11:38:46 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/09/28 13:10:46 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	*ft_leftover(char *buffer)
 	new[j] = '\0';
 	ft_char_freenull(buffer);
 	return (new);
-}
+}	
 
 char	*get_next_line(int fd)
 {

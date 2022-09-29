@@ -23,15 +23,15 @@ int main(void)
 
 	theline = NULL;	
 	fd = open("tests/textfile.txt", O_RDONLY);
-	printf("file descriptor = %d\n", fd);
+	//printf("file descriptor = %d\n", fd);
 	theline = malloc(999);
 //	bytes = read(fd, theline, 999);
 //	printf("CONTENT:\n%s\nbytes read: %d", theline, bytes);
 	while (theline)
 	{
-		printf("----next line:----\n");
+		//printf("----next line:----\n");
 		theline = get_next_line(fd);
-		printf("%s", theline);
+		//printf("%s", theline);
 		i++;
 	}
 	return (0);
