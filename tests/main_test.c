@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:59:23 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/30 13:40:02 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/03 16:25:37 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main(void)
 	int		ok[17];
 	// 16 files + 1 for NULL termination
 	char	*file[17];
-	file[0] = "tests/files/41_no_nl";
+	file[0] = "tests/files/empty";
 	file[1] = "tests/files/41_with_nl";
 	file[2] = "tests/files/42_no_nl";
 	file[3] = "tests/files/42_with_nl";
@@ -32,9 +32,9 @@ int main(void)
 	file[5] = "tests/files/43_with_nl";
 	file[6] = "tests/files/alternate_line_nl_no_nl";
 	file[7] = "tests/files/alternate_line_nl_with_nl";
-//	file[14] = "tests/files/big_line_no_nl";
-//	file[15] = "tests/files/big_line_with_nl";
-	file[10] = "tests/files/empty";
+	file[14] = "tests/files/big_line_no_nl";
+	file[15] = "tests/files/big_line_with_nl";
+	file[10] = "tests/files/41_no_nl";
 	file[11] = "tests/files/multiple_line_no_nl";
 	file[12] = "tests/files/multiple_line_with_nl";
 	file[13] = "tests/files/multiple_nlx5";
@@ -65,13 +65,17 @@ int gnl_test(char *file, int *ok)
 	char	*theline;
 	int		bytes;
 	int		bytes_gnl = 0;
+	char	*gnljoin = NULL;
+	char	*origfile = NULL;
 
 	theline = NULL;
 	printf("--------------------------------------\nTEST: %s\n", file);
 	fd = open(file, O_RDONLY);
 //	printf("file descriptor = %d\n", fd);
-	theline = malloc(10009);
+	theline = malloc(10010);
 	bytes = read(fd, theline, 10009);
+	theline[bytes] = '\0';
+	origfile = ft_strdup(theline);
 	printf("file content(printf):\n%s", theline);
 	close(fd);
 	fd = open(file, O_RDONLY);
@@ -80,23 +84,32 @@ int gnl_test(char *file, int *ok)
 	{
 		theline = get_next_line(fd);
 		if (!theline)
+		{
 			printf("\nget_next_line finished\n");
+			gnljoin = ft_strjoin(gnljoin, theline);
+		}
+
 		else
 		{
 			printf("%s", theline);
+			gnljoin = ft_strjoin(gnljoin, theline);
 			bytes_gnl += strlen(theline);
 		}
 	}
-	printf("File length %d\nget_next_line read: %d\n\n", bytes, bytes_gnl);
-	if (bytes == bytes_gnl)
+	printf("File length %d\nget_next_line read: %d\n", bytes, bytes_gnl);
+	if (gnljoin && origfile)
 	{
-		printf("OK\n");
-		*ok = 1;
-	}
-	else
-	{
-		printf("MAL\n");
-		*ok = 0;
+			printf("strcmp:%d\n\n", strcmp(gnljoin, origfile));
+		if (bytes == bytes_gnl && !strcmp(gnljoin, origfile))
+		{
+			printf("OK\n");
+			*ok = 1;
+		}
+		else
+		{
+			printf("MAL\n");
+			*ok = 0;
+		}
 	}
 	bytes = 0;
 	bytes_gnl = 0;

@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/28 13:10:46 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/03 16:46:34 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*ft_read(int fd, char *buffer)
 	bytes = 1;
 	temp = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!temp)
-		return (NULL);
+		return (ft_char_freenull(buffer));
 	while (!ft_strchr(buffer, '\n') && bytes != 0)
 	{
 		bytes = read(fd, temp, BUFFER_SIZE);
@@ -63,7 +63,10 @@ static char	*ft_leftover(char *buffer)
 	new = malloc(sizeof(char) * ft_strlen(buffer) - i + 1);
 	i++;
 	if (!new)
+	{
+		ft_char_freenull(buffer);
 		return (ft_char_freenull(new));
+	}
 	while (buffer[i])
 		new[j++] = buffer[i++];
 	new[j] = '\0';
@@ -84,8 +87,8 @@ char	*get_next_line(int fd)
 	{
 		buffer = ft_strdup("");
 		if (!buffer)
-			return (ft_char_freenull(buffer));
-	}	
+			return (NULL);
+	}
 	buffer = ft_read(fd, buffer);
 	if (!buffer)
 		return (ft_char_freenull(buffer));

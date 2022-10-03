@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/09/27 12:29:38 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/03 16:46:37 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,19 @@ char	*ft_strjoin(char *s1, char *s2)
 	newstr = (char *)malloc(len1 + len2 + 1);
 	if (!newstr)
 		return (ft_char_freenull(s1));
-	while (s1[i])
+	if (s1)
 	{
-		newstr[i] = s1[i];
-		i++;
+		while (s1[i])
+		{
+			newstr[i] = s1[i];
+			i++;
+		}
 	}
-	while (s2[j])
-		newstr[i++] = s2[j++];
+	if (s2)
+	{
+		while (s2[j])
+			newstr[i++] = s2[j++];
+	}
 	newstr[i] = '\0';
 	ft_char_freenull(s1);
 	return (newstr);
