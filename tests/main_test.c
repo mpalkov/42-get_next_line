@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:59:23 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/03 16:25:37 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/07 11:26:10 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <fcntl.h>
 
 char	*get_next_line(int fd);
-int gnl_test(char *file, int *ok);
+int gnl_test(char *file, int *ok, int i);
 
 int main(void)
 {
@@ -24,11 +24,12 @@ int main(void)
 	int		ok[17];
 	// 16 files + 1 for NULL termination
 	char	*file[17];
-	file[0] = "tests/files/empty";
+	file[0] = "tests/files/nl";
+//	file[1] = NULL;
 	file[1] = "tests/files/41_with_nl";
-	file[2] = "tests/files/42_no_nl";
-	file[3] = "tests/files/42_with_nl";
-	file[4] = "tests/files/43_no_nl";
+	file[8] = "tests/files/42_no_nl";
+	file[4] = "tests/files/42_with_nl";
+	file[9] = "tests/files/43_no_nl";
 	file[5] = "tests/files/43_with_nl";
 	file[6] = "tests/files/alternate_line_nl_no_nl";
 	file[7] = "tests/files/alternate_line_nl_with_nl";
@@ -38,14 +39,14 @@ int main(void)
 	file[11] = "tests/files/multiple_line_no_nl";
 	file[12] = "tests/files/multiple_line_with_nl";
 	file[13] = "tests/files/multiple_nlx5";
-	file[8] = "tests/files/nl";
-	file[9] = "tests/files/textfile.txt";
-	file[16] = NULL;
+	file[3] = "tests/files/empty";
+	file[2] = "tests/files/textfile.txt";
+//	file[4] = NULL;
 
 
 	while (file[i])
 	{
-		gnl_test(file[i], &ok[i]);
+		gnl_test(file[i], &ok[i], i);
 		i++;
 	}
 	if (file[i] == NULL)
@@ -59,7 +60,7 @@ int main(void)
 	return (0);
 }
 
-int gnl_test(char *file, int *ok)
+int gnl_test(char *file, int *ok, int i)
 {
 	int		fd;
 	char	*theline;
@@ -69,7 +70,7 @@ int gnl_test(char *file, int *ok)
 	char	*origfile = NULL;
 
 	theline = NULL;
-	printf("--------------------------------------\nTEST: %s\n", file);
+	printf("--------------------------------------\nTEST%d: %s\n", i, file);
 	fd = open(file, O_RDONLY);
 //	printf("file descriptor = %d\n", fd);
 	theline = malloc(10010);

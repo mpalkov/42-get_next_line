@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/03 16:46:37 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/07 12:38:34 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,13 @@ char	*ft_strjoin(char *s1, char *s2)
 	len2 = ft_strlen(s2);
 	i = 0;
 	j = 0;
+	if (!s1 && !s2)
+		return (NULL);
+/*	if (!s1)
+		return (s2);
+	if (!s2)
+		return (s1);
+*/ 
 	newstr = (char *)malloc(len1 + len2 + 1);
 	if (!newstr)
 		return (ft_char_freenull(s1));
@@ -96,18 +103,12 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 
 	i = 0;
 	if (!s || start >= (unsigned int)ft_strlen(s) || len == 0)
-	{
-		newstr = (char *)malloc(1);
-		if (!newstr)
-			return (NULL);
-		newstr[0] = '\0';
-		return (newstr);
-	}
+		return (NULL);
 	if (start + len > ft_strlen(s))
 		len = ft_strlen(s) - start;
 	newstr = (char *)malloc(len + 1);
 	if (!newstr)
-		return (NULL);
+		return (newstr);
 	while (s[start + (unsigned int)i] && i < len)
 	{
 		newstr[i] = s[start + (unsigned int)i];
