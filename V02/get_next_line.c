@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/07 13:31:06 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/07 15:52:40 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/07 16:46:57 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ ft_read(int fd, char *container)
 	int		i;
 	int		bytes;
 	ssize_t	n_pos;
+	char	*newline;
 
 	i = 0;
 	bytes = 1;
@@ -102,6 +103,21 @@ ft_read(int fd, char *container)
 		//vuelve a hacer el read y join
 	else
 	{
+		line = ft_extractline(container, n_pos);
+		if (!line)
+			// ACABAR
+		return (line);
+	
+	
+	n_pos = ft_findchar(container, '\n');
+	if (n_pos != -1)
+	{
+			}
+
+
+
+	else
+	{
 // ACABAR
 	}
 
@@ -110,17 +126,26 @@ ft_read(int fd, char *container)
 
 }
 
-char	*ft_extractline(char *str, ssize_t pos)
+char	*ft_extractline(char *str, ssize_t limit)
 {
 	char	*newline;
 	ssize_t	len;
+	ssize_t	i;
 
-	if (!str || pos < 0)
+	if (!str || limit <= 0)
 		return (ft_char_freenull(newline));
-
-// ACABAR
-
-
+	len = ft_strlen(str) - limit;
+	newline = (char *)malloc(sizeof(char) * (len + 1));
+	if (!newline)
+		return (ft_char_freenull(newline));
+	i = 0;
+	while (str[i] && i <= len)
+	{
+		newline[i] = str[i];
+		i++;
+	}
+	newline[i] = '\0';
+	return (newline);
 }
 
 char	*get_next_line(int fd)
@@ -131,13 +156,6 @@ char	*get_next_line(int fd)
 
 	if (BUFFER_SIZE < 0 || read(fd, NULL, 0) == -1)
 		return (NULL);
-	n_pos = ft_findchar(container, '\n');
-	if (n_pos != -1)
-	{
-		line = ft_extractline(container, n_pos);
-		if (!line)
-			// ACABAR
-	}
 	line = ft_read(fd, container);
 	if (!line)
 		return (NULL);
