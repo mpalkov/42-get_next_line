@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/07 13:31:06 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/07 16:46:57 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/10 14:31:57 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,60 +91,84 @@ ft_read(int fd, char *container)
 	char	*newline;
 
 	i = 0;
-	bytes = 1;
-	read(fd, buffer, BUFFER_SIZE);
+	bytes = -2;
+	bytes = read(fd, buffer, BUFFER_SIZE);
 	buffer[BUFFER_SIZE] = '\0';
-	
-	container = ft_strjoin(container, buffer);
-	if (!container)
-		return (NULL);
-	n_pos = ft_findchar(container, '\n');
+	while (n_pos < 0 && bytes > 0)
+	{
+		container = ft_strjoin(container, buffer);
+		if (!container)
+			return (NULL);
+		n_pos = ft_findchar(container, '\n');
 	if (n_pos == -1)
 		//vuelve a hacer el read y join
 	else
 	{
-		line = ft_extractline(container, n_pos);
+		line = ft_strtrim1(container, n_pos);
 		if (!line)
 			// ACABAR
 		return (line);
 	
-	
+	}
 	n_pos = ft_findchar(container, '\n');
 	if (n_pos != -1)
 	{
-			}
+
+	}
 
 
 
 	else
 	{
-// ACABAR
+		// ACABAR
 	}
-
-	
-
 
 }
 
-char	*ft_extractline(char *str, ssize_t limit)
+
+char	*ft_strtrim1(char *str, ssize_t limit)
 {
 	char	*newline;
-	ssize_t	len;
+//	ssize_t	len;
 	ssize_t	i;
-
-	if (!str || limit <= 0)
+	if (!str || limit < 0)
 		return (ft_char_freenull(newline));
-	len = ft_strlen(str) - limit;
-	newline = (char *)malloc(sizeof(char) * (len + 1));
+//	len = ft_strlen(str) - limit;
+	newline = (char *)malloc(sizeof(char) * (limit + 2));
 	if (!newline)
 		return (ft_char_freenull(newline));
 	i = 0;
-	while (str[i] && i <= len)
+	while (str[i] && i <= limit)
 	{
 		newline[i] = str[i];
 		i++;
 	}
 	newline[i] = '\0';
+	return (newline);
+}
+
+char	*ft_leftover(char *str, ssize_t n_pos)
+{
+	// "abc\ndef\nghi"
+	// n_pos = 3
+	// len = 7 = 11 - 4
+		
+	char	*newline;
+	ssize_t	len;
+	ssize_t	i;
+
+	i = 0;
+	if (!str || limit < 0)
+		return (ft_char_freenull(newline));
+	len = ft_strlen(str) - (n_pos + 1);
+	newline = (char *)malloc(sizeof(char) * (len + 1));
+	if (!newline)
+		return (ft_char_freenull(newline));
+	n_pos++;
+	while (str[n_pos] && n_pos <= len)
+		newline[n_pos++] = str[i++];
+	newline[i] = '\0';
+	ft_char_freenull(str);
 	return (newline);
 }
 
@@ -156,11 +180,22 @@ char	*get_next_line(int fd)
 
 	if (BUFFER_SIZE < 0 || read(fd, NULL, 0) == -1)
 		return (NULL);
+	if (container)
+	{
+		n_pos = ft_findchar(container, '\n');
+		if (n_pos >= 0)
+		{
+			line = ft_strtrim1(container, n_pos);
+					if (!line)
+						return (ft_char_freenull(container));
+			container = ft_leftover(container, n_pos);
+			if (!container)
+				return (NULL);
+			return (line);
+		}
+	}
 	line = ft_read(fd, container);
 	if (!line)
-		return (NULL);
-
-
-
-	return ();
+		return (ft_char_freenull(container));
+	return (line);
 }
