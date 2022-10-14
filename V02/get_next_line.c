@@ -6,30 +6,11 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/07 13:31:06 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/11 17:19:54 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/13 15:48:57 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-size_t	ft_strlen(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void	*ft_char_freenull(char *ptr)
-{
-	free(ptr);
-	ptr = NULL;
-	return (NULL);
-}
 
 // extract 'till \n (incl). DOES NOT FREE ANYTHING
 char	*ft_strtrim1(char *str, ssize_t limit)
@@ -70,9 +51,11 @@ char	*ft_leftover(char *str, ssize_t n_pos)
 		return (NULL);
 	len = ft_strlen(str);
 	newlen = len - (n_pos + 1);
+	if (newlen <= 0)
+		return (ft_char_freenull(str));
 	newline = (char *)malloc(sizeof(char) * (newlen + 1));
 	if (!newline)
-		return (ft_char_freenull(newline));
+		return (ft_char_freenull(str));
 	n_pos++;
 	while (str[n_pos] && i <= len)
 		newline[i++] = str[n_pos++];
@@ -160,7 +143,7 @@ char	*ft_read(int fd, char **contread, char *line)
 		if (n_pos == -1)
 			*contread = ft_readnsrch(fd, contread, buffer, &n_pos, &bytes);
 	}
-	if (n_pos >=0)
+	if (n_pos >= 0)
 	{
 		line = ft_strtrim1(*contread, n_pos);
 		if (!line)
@@ -173,7 +156,8 @@ char	*ft_read(int fd, char **contread, char *line)
 		ft_char_freenull(line);
 		if (!*contread || bytes < 0 || *contread[0] == '\0')
 			return (NULL);
-		line = *contread;
+		// line = *contread;
+		return (ft_char_freenull(*contread));
 	}
 	return (line);
 }
