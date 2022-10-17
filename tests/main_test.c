@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:59:23 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/07 11:26:10 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/17 11:39:06 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,28 @@
 #include <fcntl.h>
 
 char	*get_next_line(int fd);
-int gnl_test(char *file, int *ok, int i);
+int		gnl_test(char *file, int *ok, int i);
+
+
+char	*ft_strdupp(char *str)
+{
+	size_t	len;
+	char	*newstr;
+
+	len = ft_strlen(str);
+	newstr = (char *)malloc (len + 1);
+	if (!newstr)
+		return (NULL);
+	len = 0;
+	while (str[len])
+	{
+		newstr[len] = str[len];
+		len++;
+	}
+	newstr[len] = '\0';
+	return (newstr);
+}
+
 
 int main(void)
 {
@@ -26,7 +47,7 @@ int main(void)
 	char	*file[17];
 	file[0] = "tests/files/nl";
 //	file[1] = NULL;
-	file[1] = "tests/files/41_with_nl";
+	file[1] = "tests/files/alternate_line_nl_with_nl";
 	file[8] = "tests/files/42_no_nl";
 	file[4] = "tests/files/42_with_nl";
 	file[9] = "tests/files/43_no_nl";
@@ -76,7 +97,7 @@ int gnl_test(char *file, int *ok, int i)
 	theline = malloc(10010);
 	bytes = read(fd, theline, 10009);
 	theline[bytes] = '\0';
-	origfile = ft_strdup(theline);
+	origfile = ft_strdupp(theline);
 	printf("file content(printf):\n%s", theline);
 	close(fd);
 	fd = open(file, O_RDONLY);

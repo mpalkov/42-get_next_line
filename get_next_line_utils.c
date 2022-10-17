@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/07 12:38:34 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/17 16:21:06 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,31 +55,18 @@ char	*ft_strjoin(char *s1, char *s2)
 	len2 = ft_strlen(s2);
 	i = 0;
 	j = 0;
-	if (!s1 && !s2)
-		return (NULL);
-/*	if (!s1)
-		return (s2);
-	if (!s2)
-		return (s1);
-*/ 
 	newstr = (char *)malloc(len1 + len2 + 1);
 	if (!newstr)
-		return (ft_char_freenull(s1));
-	if (s1)
+		return (ft_char_freenull(&s1));
+	while (s1 && s1[i])
 	{
-		while (s1[i])
-		{
-			newstr[i] = s1[i];
-			i++;
-		}
+		newstr[i] = s1[i];
+		i++;
 	}
-	if (s2)
-	{
-		while (s2[j])
-			newstr[i++] = s2[j++];
-	}
+	while (s2 && s2[j])
+		newstr[i++] = s2[j++];
 	newstr[i] = '\0';
-	ft_char_freenull(s1);
+	ft_char_freenull(&s1);
 	return (newstr);
 }
 
@@ -88,9 +75,9 @@ char	*ft_strchr(char *s, int c)
 	int		i;
 
 	i = 0;
-	while (s[i] != (char)c && s[i] != '\0')
+	while (s && s[i] != (char)c && s[i] != '\0')
 		i++;
-	if (s[i] == (char)c)
+	if (s && s[i] == (char)c)
 		return (&s[i]);
 	else
 		return (NULL);
@@ -103,12 +90,18 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 
 	i = 0;
 	if (!s || start >= (unsigned int)ft_strlen(s) || len == 0)
-		return (NULL);
+	{
+		newstr = (char *)malloc(1);
+		if (!newstr)
+			return (NULL);
+		newstr[0] = '\0';
+		return (newstr);
+	}
 	if (start + len > ft_strlen(s))
 		len = ft_strlen(s) - start;
 	newstr = (char *)malloc(len + 1);
 	if (!newstr)
-		return (newstr);
+		return (NULL);
 	while (s[start + (unsigned int)i] && i < len)
 	{
 		newstr[i] = s[start + (unsigned int)i];
