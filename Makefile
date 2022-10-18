@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/20 12:47:00 by mpalkov           #+#    #+#              #
-#    Updated: 2022/10/17 11:40:02 by mpalkov          ###   ########.fr        #
+#    Updated: 2022/10/18 15:11:00 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ t:
 	cc -Wall -Werror -Wextra -g -D BUFFER_SIZE=100 tests/main_test.c get_next_line.c get_next_line_utils.c -o readtest.out && ./readtest.out
 
 bonus:
-	cc -Wall -Werror -Wextra -g -D BUFFER_SIZE=42 tests/main_test.c get_next_line_bonus.c get_next_line_utils_bonus.c
+	cc -Wall -Werror -Wextra -g -D BUFFER_SIZE=42 tests/main_test_bonus.c get_next_line_bonus.c get_next_line_utils_bonus.c -o bonus.out && ./bonus.out
 
 
 clean:

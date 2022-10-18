@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:59:23 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/18 15:07:19 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/18 16:59:49 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ char	*ft_strdupp(char *str)
 int main(void)
 {
 	int		i = 0;
+	int		j = 0;
 	int		ok[17];
 	// 16 files + 1 for NULL termination
 	char	*file[17];
@@ -62,14 +63,12 @@ int main(void)
 	file[13] = "tests/files/multiple_nlx5";
 	file[3] = "tests/files/empty";
 	file[2] = "tests/files/textfile.txt";
-//	file[4] = NULL;
+	file[16] = NULL;
 
-
-	
 	while (file[i])
 	{
-		gnl_test(file[i], &ok[i], i);
-		i++;
+			gnl_test(file[i], &ok[i], i);
+			i++;
 	}
 	if (file[i] == NULL)
 		ok[i] = -1;
@@ -79,54 +78,66 @@ int main(void)
 		printf("TEST %d == %d\n", i, ok[i]);
 		i--;
 	}
-
-	printf("\nSTNDAR INPUT: \n");
-	printf("GET_NEXT_LINE: %s\n", get_next_line(0));
 	return (0);
 }
+	
+	//vuelta j
+	while (j < 17)
+	{
+
+		gnl 0
+		gnl 1
+		gnl 2
+		...
+		gnl 16
+		j++;
+	}
 
 int gnl_test(char *file, int *ok, int i)
 {
 	int		fd;
-	char	*theline;
-	int		bytes;
-	int		bytes_gnl = 0;
-	char	*gnljoin = NULL;
-	char	*origfile = NULL;
+	char	*theline[17];
+	int		bytes[17];
+	int		bytes_gnl[17] = 0;
+	char	*gnljoin[17] = NULL;
+	char	*origfile[17] = NULL;
 
-	theline = NULL;
-	printf("--------------------------------------\nTEST%d: %s\n", i, file);
+	bytes[i] = 0;
+	bytes_gnl[i] = 0;
+	theline[i] = NULL;
+	printf("BONUS----------------------------------\nTEST%d: %s\n", i, file);
 	fd = open(file, O_RDONLY);
 //	printf("file descriptor = %d\n", fd);
-	theline = malloc(10010);
-	bytes = read(fd, theline, 10009);
-	theline[bytes] = '\0';
-	origfile = ft_strdupp(theline);
-	printf("file content(printf):\n%s", theline);
+	theline[i] = malloc(10010);
+	bytes = read(fd, theline[i], 10009);
+	theline[i][bytes] = '\0';
+	origfile[i] = ft_strdupp(theline[i]);
+	printf("file content(printf):\n%s", theline[i]);
 	close(fd);
 	fd = open(file, O_RDONLY);
 	printf("\n\n--------get next line\n");
-	while (theline)
+
+	while (theline[i])
 	{
-		theline = get_next_line(fd);
-		if (!theline)
+		theline[i] = get_next_line(fd);
+		if (!theline[i])
 		{
 			printf("\nget_next_line finished\n");
-			gnljoin = ft_strjoin(gnljoin, theline);
+			gnljoin[i] = ft_strjoin(gnljoin[i], theline[i]);
 		}
 
 		else
 		{
-			printf("%s", theline);
-			gnljoin = ft_strjoin(gnljoin, theline);
-			bytes_gnl += strlen(theline);
+			printf("%s", theline[i]);
+			gnljoin[i] = ft_strjoin(gnljoin[i], theline[i]);
+			bytes_gnl[i] += strlen(theline[i]);
 		}
 	}
-	printf("File length %d\nget_next_line read: %d\n", bytes, bytes_gnl);
-	if (gnljoin && origfile)
+	printf("File length %d\nget_next_line read: %d\n", bytes[i], bytes_gnl[i]);
+	if (gnljoin[i] && origfile[i])
 	{
-			printf("strcmp:%d\n\n", strcmp(gnljoin, origfile));
-		if (bytes == bytes_gnl && !strcmp(gnljoin, origfile))
+			printf("strcmp:%d\n\n", strcmp(gnljoin[i], origfile[i]));
+		if (bytes[i] == bytes_gnl[i] && !strcmp(gnljoin[i], origfile[i]))
 		{
 			printf("OK\n");
 			*ok = 1;
@@ -137,9 +148,10 @@ int gnl_test(char *file, int *ok, int i)
 			*ok = 0;
 		}
 	}
-	bytes = 0;
-	bytes_gnl = 0;
+	i++
+	j++;
 	free(theline);
+
 	return (0);
 }
 
