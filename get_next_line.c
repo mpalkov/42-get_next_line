@@ -6,12 +6,16 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/17 16:21:02 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/18 13:42:50 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+// This has to receive the argument as double pointer,
+// because if just a simple pointer is received the ptr = NULL
+// will not have effect on the actual char * after function ft_char_freenull
+// terminates.
 void	*ft_char_freenull(char **ptr)
 {
 	if (*ptr)
@@ -47,6 +51,10 @@ static char	*ft_read(int fd, char *readbuff)
 	return (readbuff);
 }
 
+
+// if (leftbuff[i] == '\0') has no explicit ft_strdup's malloc protection,
+// because leftbuff is always returned
+// and so if (!leftbuff), return(leftbuff) returns actually the NULL.
 static char	*ft_leftover(char *leftbuff)
 {
 	char	*new;
@@ -57,18 +65,14 @@ static char	*ft_leftover(char *leftbuff)
 	j = 0;
 	if (!leftbuff)
 		return (NULL);
-//		return (ft_char_freenull(leftbuff));
 	while (leftbuff[i] != '\n' && leftbuff[i] != '\0')
 		i++;
 	if (leftbuff[i] == '\0')
 	{
 		ft_char_freenull(&leftbuff);
 		leftbuff = ft_strdup("");
-		if (!leftbuff)
-			return (NULL);
 		return (leftbuff);
 	}
-//		i = 0;
 	new = malloc(sizeof(char) * ft_strlen(leftbuff) - i + 1);
 	if (!new)
 		return (ft_char_freenull(&leftbuff));
@@ -80,9 +84,20 @@ static char	*ft_leftover(char *leftbuff)
 	return (new);
 }
 
+static char	*ft_finalchecks(char **buffer, char **line)
+{
+	if (!(*buffer))
+		return (ft_char_freenull(line));
+	if (*buffer[0] == '\0')
+		*buffer = ft_char_freenull(buffer);
+	if (*line[0] == '\0')
+		return (ft_char_freenull(line));
+	return (*line);
+}
+
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer = NULL;
 	char		*line;
 	int			i;
 
@@ -104,13 +119,5 @@ char	*get_next_line(int fd)
 	if (!line)
 		return (ft_char_freenull(&buffer));
 	buffer = ft_leftover(buffer);
-	if (!buffer)
-		return (ft_char_freenull(&line));
-	if (buffer[0] == '\0')
-		buffer = ft_char_freenull(&buffer);
-	if (line[0] == 0)
-	{
-		return (ft_char_freenull(&line));
-	}
-	return (line);
+	return (ft_finalchecks(&buffer, &line));
 }
