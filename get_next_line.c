@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/18 13:42:50 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/18 13:46:33 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static char	*ft_read(int fd, char *readbuff)
 	ft_char_freenull(&temp);
 	return (readbuff);
 }
-
 
 // if (leftbuff[i] == '\0') has no explicit ft_strdup's malloc protection,
 // because leftbuff is always returned
