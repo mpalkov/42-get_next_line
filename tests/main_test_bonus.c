@@ -6,18 +6,57 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:59:23 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/18 16:59:49 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/21 17:25:58 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include "../get_next_line.h"
+#include "../get_next_line_bonus.h"
 #include <string.h>
 #include <fcntl.h>
 
-char	*get_next_line(int fd);
-int		gnl_test(char *file, int *ok, int i);
+// number of files used for testing
+#define MAXFILES (int)15
 
+#define FILE1 "tests/files/nl"
+#define FILE2 "tests/files/alternate_line_nl_with_nl"
+#define FILE3 "tests/files/textfile.txt"
+#define FILE4 "tests/files/empty"
+#define FILE5 "tests/files/42_with_nl";
+#define FILE6 "tests/files/43_with_nl";
+#define FILE7 "tests/files/alternate_line_nl_no_nl";
+#define FILE8 "tests/files/alternate_line_nl_with_nl";
+#define FILE9 "tests/files/42_no_nl";
+#define FILE10 "tests/files/43_no_nl";
+#define FILE11 "tests/files/41_no_nl";
+#define FILE12 "tests/files/multiple_line_no_nl";
+#define FILE13 "tests/files/multiple_line_with_nl";
+#define FILE14 "tests/files/big_line_no_nl";
+#define FILE15 "tests/files/big_line_with_nl";
+
+char	*ft_freenull(char **ptr)
+{
+	if(*ptr)
+		free(*ptr);
+	*ptr = NULL;
+	return (NULL);
+}
+
+typedef struct	s_vars
+{
+	int		fd;
+	char	*file;
+	char	*theline;
+	int		bytes;
+	int		bytes_gnl;
+	char	*gnljoin;
+	char	*origfile;
+	int		ok;
+	int		finished;
+}				t_vars;
+
+char	*get_next_line(int fd);
+int		gnl_test(t_vars *vars, int f);
 
 char	*ft_strdupp(char *str)
 {
@@ -38,179 +77,143 @@ char	*ft_strdupp(char *str)
 	return (newstr);
 }
 
+void	ft_initfiles(t_vars *vars)
+{
+	int i = 0;
+
+	vars[0].file = FILE1;
+	vars[1].file = FILE2;
+	vars[2].file = FILE3;
+	vars[3].file = FILE4;
+	vars[4].file = FILE5;
+	vars[5].file = FILE6;
+    vars[6].file = FILE7;
+    vars[7].file = FILE8;
+    vars[8].file = FILE9; 
+    vars[9].file = FILE10;
+	vars[10].file = FILE11;
+    vars[11].file = FILE12;
+    vars[12].file = FILE13;
+    vars[13].file = FILE14;
+    vars[14].file = FILE15;
+//    vars[15].file = NULL;
+	
+	while (i < MAXFILES)
+	{
+		vars[i].fd = -1;
+		vars[i].bytes = 0;
+		vars[i].bytes_gnl = 0;
+		vars[i].gnljoin = NULL;
+		vars[i].origfile = NULL;
+		vars[i].ok = 0;
+		vars[i].finished = 0;
+
+		vars[i].fd = open(vars[i].file, O_RDONLY);
+		vars[i].theline = malloc(10010);
+		vars[i].bytes = read(vars[i].fd, vars[i].theline, 10009);
+		vars[i].theline[vars[i].bytes] = '\0';
+		vars[i].origfile = ft_strdupp(vars[i].theline);
+		close(vars[i].fd);
+		ft_freenull(&vars[i].theline);
+		vars[i].fd = open(vars[i].file, O_RDONLY);
+
+		i++;
+	}
+	return ;
+}
+
+int	ft_alldone(t_vars *vars)
+{
+	int	i = 0;
+
+	while(i < MAXFILES)
+	{
+		if (!vars[i].file)
+			return (1);
+		if (!vars[i].finished)
+		{
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+int	ft_gnl_finalcheck(t_vars *vars, int f)
+{
+	int	cmp = -1;
+	
+	printf("\nget_next_line finished\n");
+	printf("File length %d\nget_next_line read: %d\n", vars[f].bytes, vars[f].bytes_gnl);
+	if (vars[f].gnljoin && vars[f].origfile)
+	{
+		cmp = strcmp(vars[f].gnljoin, vars[f].origfile);
+		printf("strcmp:%d\n\n", cmp);
+		if (vars[f].bytes == vars[f].bytes_gnl && !cmp)
+		{ 
+			printf("OK\n");
+			vars[f].ok = 1;
+		}
+		else
+		{
+			printf("MAL\n");
+			vars[f].ok = 0;
+		}
+	}
+	return (0);
+}
+
+int gnl_test(t_vars *vars, int f)
+{
+	if (vars[f].finished)
+		return (1);
+	else
+	{
+		printf("\n\n--------get next line, file[%i]:\n", f);
+		vars[f].theline = get_next_line(vars[f].fd);
+		vars[f].bytes_gnl += ft_strlen(vars[f].theline);
+		vars[f].gnljoin = ft_strjoin(vars[f].gnljoin, vars[f].theline);
+		
+		if (!vars[f].theline)
+		{
+			vars[f].finished = 1;
+			ft_gnl_finalcheck(vars, f);
+			ft_freenull(&vars[f].theline);
+			return (1);
+		}
+		printf("%s\n", vars[f].theline);
+		return (1);
+	}
+	return (1);
+}
 
 int main(void)
 {
-	int		i = 0;
-	int		j = 0;
-	int		ok[17];
-	// 16 files + 1 for NULL termination
-	char	*file[17];
-	file[0] = "tests/files/nl";
-//	file[1] = NULL;
-	file[1] = "tests/files/alternate_line_nl_with_nl";
-	file[8] = "tests/files/42_no_nl";
-	file[4] = "tests/files/42_with_nl";
-	file[9] = "tests/files/43_no_nl";
-	file[5] = "tests/files/43_with_nl";
-	file[6] = "tests/files/alternate_line_nl_no_nl";
-	file[7] = "tests/files/alternate_line_nl_with_nl";
-	file[14] = "tests/files/big_line_no_nl";
-	file[15] = "tests/files/big_line_with_nl";
-	file[10] = "tests/files/41_no_nl";
-	file[11] = "tests/files/multiple_line_no_nl";
-	file[12] = "tests/files/multiple_line_with_nl";
-	file[13] = "tests/files/multiple_nlx5";
-	file[3] = "tests/files/empty";
-	file[2] = "tests/files/textfile.txt";
-	file[16] = NULL;
+	t_vars	vars[MAXFILES];
+	int		f = 0;
 
-	while (file[i])
+	ft_initfiles(vars);
+
+	while (!ft_alldone(vars))
 	{
-			gnl_test(file[i], &ok[i], i);
-			i++;
+		// the vars[f].file check is if I want to stop the tests at some point
+		// before all files finish testing. 
+		while (f < MAXFILES && vars[f].file)
+		{
+			if (vars[f].finished != 1)
+				gnl_test(vars, f);
+			f++;
+		}
+		f = 0;
 	}
-	if (file[i] == NULL)
-		ok[i] = -1;
-	printf("\n----------\nALL TESTS FINISHED\n\n1 == OK | 0 == MAL | -1 == END OF TESTS\n");
-	while (i >= 0)
-	{
-		printf("TEST %d == %d\n", i, ok[i]);
-		i--;
-	}
-	return (0);
-}
 	
-	//vuelta j
-	while (j < 17)
+	printf("\n----------\nALL TESTS FINISHED\n\n1 == OK | 0 == MAL\n");
+	f = 0;
+	while (f < MAXFILES)
 	{
-
-		gnl 0
-		gnl 1
-		gnl 2
-		...
-		gnl 16
-		j++;
+		printf("TEST %d == %d\n", f, vars[f].ok);
+		f++;
 	}
-
-int gnl_test(char *file, int *ok, int i)
-{
-	int		fd;
-	char	*theline[17];
-	int		bytes[17];
-	int		bytes_gnl[17] = 0;
-	char	*gnljoin[17] = NULL;
-	char	*origfile[17] = NULL;
-
-	bytes[i] = 0;
-	bytes_gnl[i] = 0;
-	theline[i] = NULL;
-	printf("BONUS----------------------------------\nTEST%d: %s\n", i, file);
-	fd = open(file, O_RDONLY);
-//	printf("file descriptor = %d\n", fd);
-	theline[i] = malloc(10010);
-	bytes = read(fd, theline[i], 10009);
-	theline[i][bytes] = '\0';
-	origfile[i] = ft_strdupp(theline[i]);
-	printf("file content(printf):\n%s", theline[i]);
-	close(fd);
-	fd = open(file, O_RDONLY);
-	printf("\n\n--------get next line\n");
-
-	while (theline[i])
-	{
-		theline[i] = get_next_line(fd);
-		if (!theline[i])
-		{
-			printf("\nget_next_line finished\n");
-			gnljoin[i] = ft_strjoin(gnljoin[i], theline[i]);
-		}
-
-		else
-		{
-			printf("%s", theline[i]);
-			gnljoin[i] = ft_strjoin(gnljoin[i], theline[i]);
-			bytes_gnl[i] += strlen(theline[i]);
-		}
-	}
-	printf("File length %d\nget_next_line read: %d\n", bytes[i], bytes_gnl[i]);
-	if (gnljoin[i] && origfile[i])
-	{
-			printf("strcmp:%d\n\n", strcmp(gnljoin[i], origfile[i]));
-		if (bytes[i] == bytes_gnl[i] && !strcmp(gnljoin[i], origfile[i]))
-		{
-			printf("OK\n");
-			*ok = 1;
-		}
-		else
-		{
-			printf("MAL\n");
-			*ok = 0;
-		}
-	}
-	i++
-	j++;
-	free(theline);
-
-	return (0);
-}
-
-
-int gnl_test_stdin(int *ok)
-{
-	int		fd;
-	char	*theline;
-	int		bytes;
-	int		bytes_gnl = 0;
-	char	*gnljoin = NULL;
-	char	*origfile = NULL;
-
-	theline = NULL;
-	printf("--------------------------------------\nTEST stdin_no_nl\n");
-	fd = 0;
-	theline = get_next_line(0);
-	//	printf("file descriptor = %d\n", fd);
-	theline = malloc(10010);
-	bytes = read(fd, theline, 10009);
-	theline[bytes] = '\0';
-	origfile = ft_strdupp(theline);
-	printf("file content(printf):\n%s", theline);
-	close(fd);
-//	fd = open(file, O_RDONLY);
-	printf("\n\n--------get next line\n");
-	while (theline)
-	{
-		theline = get_next_line(fd);
-		if (!theline)
-		{
-			printf("\nget_next_line finished\n");
-			gnljoin = ft_strjoin(gnljoin, theline);
-		}
-
-		else
-		{
-			printf("%s", theline);
-			gnljoin = ft_strjoin(gnljoin, theline);
-			bytes_gnl += strlen(theline);
-		}
-	}
-	printf("File length %d\nget_next_line read: %d\n", bytes, bytes_gnl);
-	if (gnljoin && origfile)
-	{
-			printf("strcmp:%d\n\n", strcmp(gnljoin, origfile));
-		if (bytes == bytes_gnl && !strcmp(gnljoin, origfile))
-		{
-			printf("OK\n");
-			*ok = 1;
-		}
-		else
-		{
-			printf("MAL\n");
-			*ok = 0;
-		}
-	}
-	bytes = 0;
-	bytes_gnl = 0;
-	free(theline);
+	printf("------------ END ------------\n");
 	return (0);
 }

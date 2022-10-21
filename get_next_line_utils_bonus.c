@@ -6,11 +6,11 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 13:12:18 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/18 14:00:04 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/19 11:03:58 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(char *str)
 {

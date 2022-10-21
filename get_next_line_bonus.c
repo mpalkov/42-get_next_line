@@ -6,11 +6,11 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 12:30:25 by mpalkov           #+#    #+#             */
-/*   Updated: 2022/10/18 14:04:47 by mpalkov          ###   ########.fr       */
+/*   Updated: 2022/10/21 16:14:04 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 // This has to receive the argument as double pointer,
 // because if just a simple pointer is received the ptr = NULL
@@ -30,7 +30,7 @@ static char	*ft_read(int fd, char *readbuff)
 	char	*temp;
 
 	bytes = 1;
-	temp = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	temp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!temp)
 		return (ft_char_freenull(&readbuff));
 	while (!ft_strchr(readbuff, '\n') && bytes != 0)
